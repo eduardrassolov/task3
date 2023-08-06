@@ -81,9 +81,9 @@ export async function deleteAllNotes() {
 }
 export function updateNote(id: string, data: IData) {
   try {
-    const index = initialData.findIndex((note) => note.id === id);
+    const index: number = initialData.findIndex((note) => note.id === id);
     if (index === -1) {
-      throw new CustomError(httpCode.NO_CONTENT, "No any data found by this id");
+      throw new CustomError(httpCode.NOT_FOUND, "No any data found by this id");
     }
     initialData = initialData.map((note, noteIndex) =>
       noteIndex === index ? { ...note, ...data } : note
@@ -91,5 +91,19 @@ export function updateNote(id: string, data: IData) {
     return initialData;
   } catch (error) {
     throw error;
+  }
+}
+export function toogleArchiveNote(id: string, status: boolean) {
+  try {
+    const noteIndex: number = initialData.findIndex((note) => note.id === id);
+    if (noteIndex === -1) {
+      throw new CustomError(httpCode.NOT_FOUND, "No any data found by this id");
+    }
+    initialData = initialData.map((note, index) =>
+      noteIndex === index ? { ...note, isArchived: status } : note
+    );
+    return initialData;
+  } catch (err) {
+    throw err;
   }
 }

@@ -101,6 +101,29 @@ export const updateNote = async (req: Request, res: Response) => {
   }
 };
 
+export const archiveNoteById = async (req: Request, res: Response) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+    await service.toogleArchiveNote(id, true);
+    res.status(httpCode.OK).send("Note is succesfully archived");
+  } catch (error) {
+    if (error instanceof Error) res.status(httpCode.NOT_FOUND).send(error.message);
+  }
+};
+export const activeNoteById = async (req: Request, res: Response) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+    await service.toogleArchiveNote(id, false);
+    res.status(httpCode.OK).send("Note is succesfully activated");
+  } catch (error) {
+    if (error instanceof Error) res.status(httpCode.NOT_FOUND).send(error.message);
+  }
+};
+
 export const getNotesStats = (req: Request, res: Response) => {
   res.send("get notes stats");
 };
