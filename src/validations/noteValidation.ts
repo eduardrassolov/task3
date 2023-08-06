@@ -15,5 +15,5 @@ export const noteSchema: yup.ObjectSchema<IData> = yup
       .string()
       .oneOf([...Object.keys(categories)])
       .required("Category must be one of the following: idea, task, random"),
-  }) //TODO refactor magic number 3
-  .test("max-fields", "Only three fields are allowed", (values) => Object.keys(values).length <= 3);
+  })
+  .noUnknown();
