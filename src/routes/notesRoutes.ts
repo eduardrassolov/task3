@@ -14,4 +14,4 @@ router.delete("/notes", controller.deleteAllNotes);
 // router.post("/notes", (req, res) => controller.createNote(req, res));
 router.post("/notes", validation(noteSchema), controller.createNote);
 
-router.put("/notes/:id", controller.updateNote);
+router.patch("/notes/:id", controller.updateNote);
