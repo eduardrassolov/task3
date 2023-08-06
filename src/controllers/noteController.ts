@@ -1,10 +1,11 @@
 import express, { Response, Request } from "express";
 import * as service from "../services/noteService";
+import * as statsService from "../services/statsService";
 import httpCode from "../helpers/httpCode";
-import { string } from "yup";
 
 export const router = express.Router();
 
+// get requests
 export const getAllNotes = async (req: Request, res: Response) => {
   try {
     const filter: string | undefined = req.query.filter as string | undefined;
@@ -38,13 +39,14 @@ export const getNotesByStatusFilter = async (req: Request, res: Response) => {
 };
 export const getNotesStats = async (req: Request, res: Response) => {
   try {
-    const result = await service.getNotesStats();
+    const result = await statsService.getNotesStats();
     res.status(httpCode.OK).send(result);
   } catch (error) {
     if (error instanceof Error) res.status(httpCode.INTERNAL_SERVER_ERROR).send(error.message);
   }
 };
 
+// post request
 export const createNote = async (req: Request, res: Response) => {
   try {
     const { body } = req;
@@ -61,6 +63,8 @@ export const createNote = async (req: Request, res: Response) => {
     }
   }
 };
+
+//delete requests
 export const deleteNoteById = async (req: Request, res: Response) => {
   try {
     const response = await service.deleteNoteById(req.params.id);
@@ -87,6 +91,7 @@ export const deleteAllNotes = async (req: Request, res: Response) => {
   }
 };
 
+//patch requests
 export const updateNote = async (req: Request, res: Response) => {
   try {
     const {
