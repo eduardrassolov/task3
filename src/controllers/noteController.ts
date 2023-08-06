@@ -15,9 +15,22 @@ export const getAllNotes = async (req: Request, res: Response) => {
 
 export const getNoteById = async (req: Request, res: Response) => {
   try {
-    console.log("params", req.params.id);
-    const note = await service.getNoteById(req.params.id);
+    const {
+      params: { id },
+    } = req;
+    const note = await service.getNoteById(id);
     res.send(note);
+  } catch (error) {
+    if (error instanceof Error) res.status(httpCode.NOT_FOUND).send(error.message);
+  }
+};
+export const getNotesByStatusFilter = async (req: Request, res: Response) => {
+  try {
+    const {
+      params: { filter },
+    } = req;
+    const notes = await service.getNotesByStatusFilter(filter);
+    res.send(notes);
   } catch (error) {
     if (error instanceof Error) res.status(httpCode.NOT_FOUND).send(error.message);
   }
@@ -41,9 +54,9 @@ export const createNote = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteNoteById = (req: Request, res: Response) => {
+export const deleteNoteById = async (req: Request, res: Response) => {
   try {
-    const response = service.deleteNoteById(req.params.id);
+    const response = await service.deleteNoteById(req.params.id);
 
     if (response) {
       res.status(httpCode.NO_CONTENT).send({ message: "Note deleted successfully" });
@@ -55,9 +68,9 @@ export const deleteNoteById = (req: Request, res: Response) => {
   }
 };
 
-export const deleteAllNotes = (req: Request, res: Response) => {
+export const deleteAllNotes = async (req: Request, res: Response) => {
   try {
-    const response = service.deleteAllNotes();
+    const response = await service.deleteAllNotes();
     if (response) {
       res.status(httpCode.NO_CONTENT).send({ message: "All notes deleted successfully" });
     } else {

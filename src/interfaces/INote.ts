@@ -1,8 +1,7 @@
-export interface INote {
+import { IData } from "../validations/noteValidation";
+
+export interface INote extends IData {
   id: string;
-  name: string;
   created: string;
-  category: string;
-  content: string;
   isArchived: boolean;
 }
