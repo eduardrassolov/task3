@@ -11,16 +11,22 @@ import { categories } from "../helpers/categoryNames";
 
 let initialData: Array<INote> = db;
 
-export async function getAllNotes() {
+export async function getAllNotes(filter: string | undefined) {
   try {
     const notes: Array<INote> = initialData;
+
     if (!notes.length) {
       throw new CustomError(
         httpCode.NO_CONTENT,
         "No notes found, please create a note by sending a POST request to /notes"
       );
     }
-    return notes;
+
+    if (!filter || filter === filterStatus.all) return notes;
+
+    return filter === filterStatus.active
+      ? initialData.filter((note) => !note.isArchived)
+      : initialData.filter((note) => note.isArchived);
   } catch (error) {
     throw error;
   }
