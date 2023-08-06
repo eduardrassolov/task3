@@ -8,12 +8,16 @@ import { IError } from "../middleware/validationMiddleware";
 import { type } from "os";
 import { CustomError } from "../helpers/CustomError";
 import { categories } from "../helpers/categoryNames";
+import { parseDate } from "../helpers/parseContent";
 
 let initialData: Array<INote> = db;
 
 export async function getAllNotes(filter: string | undefined) {
   try {
-    const notes: Array<INote> = initialData;
+    const notes: Array<INote> = initialData.map((note) => ({
+      ...note,
+      dates: parseDate(note.content),
+    }));
 
     if (!notes.length) {
       throw new CustomError(
