@@ -12,7 +12,6 @@ router.get("/notes/:id", controller.getNoteById);
 router.delete("/notes/:id", controller.deleteNoteById);
 router.delete("/notes", controller.deleteAllNotes);
 
-// router.post("/notes", (req, res) => controller.createNote(req, res));
 router.post("/notes", validation(noteSchema), controller.createNote);
 
 router.patch("/notes/:id", validation(editSchema), controller.updateNote);

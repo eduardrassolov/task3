@@ -4,6 +4,9 @@ import { INote } from "../interfaces/INote";
 import { filterStatus } from "../helpers/filterSetting";
 import { generateNote } from "../helpers/generateNote";
 import { IData } from "../validations/noteValidation";
+import { IError } from "../middleware/validationMiddleware";
+import { type } from "os";
+import { CustomError } from "../helpers/CustomError";
 
 let initialData: Array<INote> = db;
 
@@ -11,7 +14,10 @@ export async function getAllNotes() {
   try {
     const notes: Array<INote> = initialData;
     if (!notes.length) {
-      throw new Error("No notes found, please create a note by sending a POST request to /notes");
+      throw new CustomError(
+        httpCode.NO_CONTENT,
+        "No notes found, please create a note by sending a POST request to /notes"
+      );
     }
     return notes;
   } catch (error) {
@@ -22,7 +28,7 @@ export async function getNoteById(id: string) {
   try {
     const note: INote | undefined = initialData.find((note) => note.id === id);
     if (!note) {
-      throw new Error("Note not found, wrong id");
+      throw new CustomError(httpCode.BAD_REQUEST, "Note not found, wrong id");
     }
     return note;
   } catch (error) {
@@ -57,7 +63,7 @@ export async function deleteNoteById(id: string) {
   try {
     const newData = initialData.filter((note) => note.id !== id);
     if (newData.length === initialData.length) {
-      throw new Error("Note not found, wrong id");
+      throw new CustomError(httpCode.BAD_REQUEST, "Note not found, wrong id");
     }
     initialData = [...newData];
     return initialData;
@@ -75,7 +81,13 @@ export async function deleteAllNotes() {
 }
 export function updateNote(id: string, data: IData) {
   try {
-    initialData = initialData.map((note) => (note.id === id ? { ...note, ...data } : note));
+    const index = initialData.findIndex((note) => note.id === id);
+    if (index === -1) {
+      throw new CustomError(httpCode.NO_CONTENT, "No any data found by this id");
+    }
+    initialData = initialData.map((note, noteIndex) =>
+      noteIndex === index ? { ...note, ...data } : note
+    );
     return initialData;
   } catch (error) {
     throw error;
