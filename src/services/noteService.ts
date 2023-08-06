@@ -7,6 +7,7 @@ import { IData } from "../validations/noteValidation";
 import { IError } from "../middleware/validationMiddleware";
 import { type } from "os";
 import { CustomError } from "../helpers/CustomError";
+import { categories } from "../helpers/categoryNames";
 
 let initialData: Array<INote> = db;
 
@@ -103,6 +104,36 @@ export function toogleArchiveNote(id: string, status: boolean) {
       noteIndex === index ? { ...note, isArchived: status } : note
     );
     return initialData;
+  } catch (err) {
+    throw err;
+  }
+}
+
+interface IStats {
+  category: string;
+  activeCount: number;
+  archivedCount: number;
+}
+
+export function getNotesStats() {
+  try {
+    const stats: Array<IStats> = Object.keys(categories).map((category) => ({
+      category,
+      ...initialData
+        .filter((note) => note.category === category)
+        .reduce(
+          (acc, note) => {
+            note.isArchived ? acc.archivedCount++ : acc.activeCount++;
+            return acc;
+          },
+          {
+            activeCount: 0,
+            archivedCount: 0,
+          }
+        ),
+    }));
+
+    return stats;
   } catch (err) {
     throw err;
   }

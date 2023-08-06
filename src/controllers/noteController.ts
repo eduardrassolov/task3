@@ -124,6 +124,11 @@ export const activeNoteById = async (req: Request, res: Response) => {
   }
 };
 
-export const getNotesStats = (req: Request, res: Response) => {
-  res.send("get notes stats");
+export const getNotesStats = async (req: Request, res: Response) => {
+  try {
+    const result = await service.getNotesStats();
+    res.status(httpCode.OK).send(result);
+  } catch (error) {
+    if (error instanceof Error) res.status(httpCode.INTERNAL_SERVER_ERROR).send(error.message);
+  }
 };
