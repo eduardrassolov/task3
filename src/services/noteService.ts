@@ -3,6 +3,7 @@ import httpCode from "../helpers/httpCode";
 import { INote } from "../interfaces/INote";
 import { filterStatus } from "../helpers/filterSetting";
 import { generateNote } from "../helpers/generateNote";
+import { IData } from "../validations/noteValidation";
 
 let initialData: Array<INote> = db;
 
@@ -72,6 +73,11 @@ export async function deleteAllNotes() {
     throw error;
   }
 }
-export function updateNote(id: string, data: any) {
-  return;
+export function updateNote(id: string, data: IData) {
+  try {
+    initialData = initialData.map((note) => (note.id === id ? { ...note, ...data } : note));
+    return initialData;
+  } catch (error) {
+    throw error;
+  }
 }

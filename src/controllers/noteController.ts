@@ -1,7 +1,7 @@
 import express, { Response, Request } from "express";
 import * as service from "../services/noteService";
 import httpCode from "../helpers/httpCode";
-import exp from "constants";
+
 export const router = express.Router();
 
 export const getAllNotes = async (req: Request, res: Response) => {
@@ -81,8 +81,24 @@ export const deleteAllNotes = async (req: Request, res: Response) => {
   }
 };
 
-export const updateNote = (req: Request, res: Response) => {
-  res.send("update note");
+export const updateNote = async (req: Request, res: Response) => {
+  try {
+    const {
+      params: { id },
+      body,
+    } = req;
+    console.log("params", id);
+    console.log("body", body);
+
+    const response = await service.updateNote(id, body);
+    if (response) {
+      res.status(httpCode.OK).send({ message: "Data updated succefully" });
+    } else {
+      throw new Error("Something went wrong");
+    }
+  } catch (error) {
+    if (error instanceof Error) res.status(httpCode.BAD_REQUEST).send(error.message);
+  }
 };
 
 export const getNotesStats = (req: Request, res: Response) => {
