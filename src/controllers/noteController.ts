@@ -1,18 +1,19 @@
 import express, { Response, Request } from "express";
 import * as service from "../services/noteService";
 import httpCode from "../helpers/httpCode";
+import { string } from "yup";
 
 export const router = express.Router();
 
 export const getAllNotes = async (req: Request, res: Response) => {
   try {
-    const notes = await service.getAllNotes();
+    const filter: string | undefined = req.query.filter as string | undefined;
+    const notes = await service.getAllNotes(filter);
     res.send(notes);
   } catch (error) {
     if (error instanceof Error) res.status(httpCode.NOT_FOUND).send(error.message);
   }
 };
-
 export const getNoteById = async (req: Request, res: Response) => {
   try {
     const {
@@ -35,8 +36,15 @@ export const getNotesByStatusFilter = async (req: Request, res: Response) => {
     if (error instanceof Error) res.status(httpCode.NOT_FOUND).send(error.message);
   }
 };
+export const getNotesStats = async (req: Request, res: Response) => {
+  try {
+    const result = await service.getNotesStats();
+    res.status(httpCode.OK).send(result);
+  } catch (error) {
+    if (error instanceof Error) res.status(httpCode.INTERNAL_SERVER_ERROR).send(error.message);
+  }
+};
 
-//TODO addd validation for body data
 export const createNote = async (req: Request, res: Response) => {
   try {
     const { body } = req;
@@ -53,7 +61,6 @@ export const createNote = async (req: Request, res: Response) => {
     }
   }
 };
-
 export const deleteNoteById = async (req: Request, res: Response) => {
   try {
     const response = await service.deleteNoteById(req.params.id);
@@ -67,7 +74,6 @@ export const deleteNoteById = async (req: Request, res: Response) => {
     if (error instanceof Error) res.status(httpCode.BAD_REQUEST).send(error.message);
   }
 };
-
 export const deleteAllNotes = async (req: Request, res: Response) => {
   try {
     const response = await service.deleteAllNotes();
@@ -100,7 +106,6 @@ export const updateNote = async (req: Request, res: Response) => {
     if (error instanceof Error) res.status(httpCode.BAD_REQUEST).send(error.message);
   }
 };
-
 export const archiveNoteById = async (req: Request, res: Response) => {
   try {
     const {
@@ -121,14 +126,5 @@ export const activeNoteById = async (req: Request, res: Response) => {
     res.status(httpCode.OK).send("Note is succesfully activated");
   } catch (error) {
     if (error instanceof Error) res.status(httpCode.NOT_FOUND).send(error.message);
-  }
-};
-
-export const getNotesStats = async (req: Request, res: Response) => {
-  try {
-    const result = await service.getNotesStats();
-    res.status(httpCode.OK).send(result);
-  } catch (error) {
-    if (error instanceof Error) res.status(httpCode.INTERNAL_SERVER_ERROR).send(error.message);
   }
 };
