@@ -12,7 +12,7 @@ Server will host on http://localhost:3000
 |Type query|Endpoint|Action|
 |----------|--------|------|
 |/GET|/notes|return all notes|
-|/GET|/notes/:id/return note by id|
+|/GET|/notes/:id/|return note by id|
 |/GET|/notes?filter=active|return all active notes|
 |/GET|/notes?filter=archived|return all archived notes|
 |/GET|/notes/stats|return statistic of active and archived notes by each category|
