@@ -6,6 +6,7 @@ export type EditNote = {
   content?: string;
   // category?: keyof typeof categories;
   category?: string;
+  isArchived?: boolean;
 };
 
 export const editSchema: yup.ObjectSchema<EditNote> = yup
@@ -14,5 +15,6 @@ export const editSchema: yup.ObjectSchema<EditNote> = yup
     name: yup.string().min(1).trim("Name is incorrect, remove spaces"),
     content: yup.string().min(1).trim("Content is incorrect, remove spaces"),
     category: yup.string().oneOf([...Object.keys(categories)]),
+    isArchived: yup.boolean(),
   })
   .noUnknown();
