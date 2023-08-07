@@ -8,11 +8,12 @@ To start localy:
 Server will host on http://localhost:3000
 
 ### `List of endpoints`
+To test POST/PATCH - send data in JSON format
 
 |Type query|Endpoint|Action|
 |----------|--------|------|
 |/GET|/notes|return all notes|
-|/GET|/notes/:id/|return note by id|
+|/GET|/notes/:id|return note by id|
 |/GET|/notes?filter=active|return all active notes|
 |/GET|/notes?filter=archived|return all archived notes|
 |/GET|/notes/stats|return statistic of active and archived notes by each category|
@@ -20,9 +21,3 @@ Server will host on http://localhost:3000
 |/DELETE|/notes/:id|delete note by ID|
 |/DELETE|/notes|delete all notes|
 |/PATCH|/notes/:id|update note by id (you can edit only `name`, `content`, `category`)|
-|/PATCH|/notes/:id/archive|update note by id to `archived`|
-|/PATCH|/notes/:id/active|update note by id to `active`|
-
-
-
-
