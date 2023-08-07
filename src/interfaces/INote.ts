@@ -1,4 +1,4 @@
-import { IData } from "../validations/noteValidation";
+import { IData } from "./IData";
 
 export interface INote extends IData {
   id: string;

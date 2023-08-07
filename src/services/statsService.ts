@@ -1,5 +1,5 @@
-import { categories } from "../helpers/categoryNames";
-import { INote } from "../interfaces/INote";
+import { categories } from "../config/categoryNames";
+
 import { initialData } from "./noteService";
 
 interface IStats {
@@ -9,25 +9,21 @@ interface IStats {
 }
 
 export function getNotesStats(): Array<IStats> {
-  try {
-    const stats: Array<IStats> = Object.keys(categories).map((category) => ({
-      category,
-      ...initialData
-        .filter((note) => note.category === category)
-        .reduce(
-          (acc, note) => {
-            note.isArchived ? acc.archivedCount++ : acc.activeCount++;
-            return acc;
-          },
-          {
-            activeCount: 0,
-            archivedCount: 0,
-          }
-        ),
-    }));
+  const stats: Array<IStats> = Object.keys(categories).map((category) => ({
+    category,
+    ...initialData
+      .filter((note) => note.category === category)
+      .reduce(
+        (acc, note) => {
+          note.isArchived ? acc.archivedCount++ : acc.activeCount++;
+          return acc;
+        },
+        {
+          activeCount: 0,
+          archivedCount: 0,
+        }
+      ),
+  }));
 
-    return stats;
-  } catch (err) {
-    throw err;
-  }
+  return stats;
 }
