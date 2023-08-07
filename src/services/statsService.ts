@@ -1,6 +1,6 @@
 import { categories } from "../config/categoryNames";
-
 import { initialData } from "./noteService";
+
 
 interface IStats {
   category: string;
@@ -8,13 +8,11 @@ interface IStats {
   archivedCount: number;
 }
 
-export function getNotesStats(): Array<IStats> {
+// 
+export function calcStats(): Array<IStats> {
   const stats: Array<IStats> = Object.keys(categories).map((category) => ({
-    category,
-    ...initialData
-      .filter((note) => note.category === category)
-      .reduce(
-        (acc, note) => {
+    category, ...initialData.filter((note) => note.category === category)
+      .reduce((acc, note) => {
           note.isArchived ? acc.archivedCount++ : acc.activeCount++;
           return acc;
         },

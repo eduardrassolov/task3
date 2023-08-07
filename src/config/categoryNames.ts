@@ -1,5 +1,8 @@
-type Category = {
-  [key: string]: string;
+export type Category = {
+  idea: string;
+  task: string;
+  random: string;
+  quote: string;
 };
 
 export const categories: Readonly<Category> = {
