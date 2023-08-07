@@ -55,6 +55,7 @@ export const getNotesStats = async (req: Request, res: Response) => {
 export const createNote = async (req: Request, res: Response) => {
   try {
     const { body } = req;
+    console.log('dboy', body);
     const response = await service.createNote(body);
 
     if (response) {
@@ -109,9 +110,11 @@ export const deleteAllNotes = async (req: Request, res: Response) => {
 export const updateNote = async (req: Request, res: Response) => {
   try {
     const { params: { id }, body } = req;
-     if (!id) {
-      throw new Error("Id is not provided");
+
+    if (!id || !Object.keys(body).length) {
+      throw new Error("Wrong id or data");
     }
+    
     const response = await service.updateNote(id, body);
 
     if (response) {
@@ -127,40 +130,3 @@ export const updateNote = async (req: Request, res: Response) => {
     }
   }
 };
-
-//archive note by id
-// export const archiveNoteById = async (req: Request, res: Response) => {
-//   try {
-//     const { params: { id } } = req;
-//     if (!id) {
-//       throw new Error("Id is not provided");
-//     }
-
-//     await service.toogleArchiveNote(id, true);
-
-//     res.status(httpCode.OK).send("Note is succesfully archived");
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       res.status(httpCode.NOT_FOUND).send(error.message);
-//     }
-//   }
-// };
-
-// // activate note by id
-// export const activeNoteById = async (req: Request, res: Response) => {
-//   try {
-//     const { params: { id } } = req;
-//     if (!id) {
-//       throw new Error("Id is not provided");
-//     }
-
-//     await service.toogleArchiveNote(id, false);
-
-//     res.status(httpCode.OK).send("Note is succesfully activated");
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       res.status(httpCode.NOT_FOUND).send(error.message);
-//     }
-//   }
-// };
-
