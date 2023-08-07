@@ -4,7 +4,8 @@ import { categories } from "../config/categoryNames";
 export type EditNote = {
   name?: string;
   content?: string;
-  category?: keyof typeof categories;
+  // category?: keyof typeof categories;
+  category?: string;
 };
 
 export const editSchema: yup.ObjectSchema<EditNote> = yup

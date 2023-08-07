@@ -1,16 +1,19 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
+import { ObjectSchema } from "yup";
+
 import { IData } from "../interfaces/IData";
-import * as yup from "yup";
 import { EditNote } from "../validations/editValidation";
 
-export const validation =
-  (schema: yup.ObjectSchema<EditNote | IData>) =>
-  async (req: Request, res: Response, next: any) => {
+
+export const validation = (schema: ObjectSchema<EditNote | IData >) =>
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const data: IData = req.body;
-      await schema.validate(data, { strict: true });
-      return next();
+        const data: IData = req.body;
+        await schema.validate(data, { strict: true });
+      
+        return next();
     } catch (error: any) {
-      res.status(error.status || 500).send(error.message);
+        res.status(error.status || 500).send(error.message || "Something went wrong") ;
+     
     }
-  };
+  }

@@ -1,11 +1,11 @@
 type Filter = {
-  all: string;
-  active: string;
-  archived: string;
+  ALL: string;
+  ACTIVE: string;
+  ARCHIVED: string;
 };
 
 export const filterStatus: Filter = {
-  all: "all",
-  active: "active",
-  archived: "archived",
+  ALL: "all",
+  ACTIVE: "active",
+  ARCHIVED: "archived",
 };
