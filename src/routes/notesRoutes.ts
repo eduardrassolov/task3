@@ -13,8 +13,6 @@ router.get("/notes/:id", controller.getNoteById);
 router.post("/notes", validation(noteSchema), controller.createNote);
 
 router.patch("/notes/:id", validation(editSchema), controller.updateNote);
-router.patch("/notes/:id/active", controller.activeNoteById);
-router.patch("/notes/:id/archive", controller.archiveNoteById);
 
 router.delete("/notes/:id", controller.deleteNoteById);
 router.delete("/notes", controller.deleteAllNotes);
