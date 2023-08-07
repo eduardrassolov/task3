@@ -1,127 +1,96 @@
 import db from "../db.json";
-import httpCode from "../helpers/httpCode";
+import httpCode from "../config/httpCode";
 import { INote } from "../interfaces/INote";
-import { filterStatus } from "../helpers/filterSetting";
-import { generateNote } from "../helpers/generateNote";
-import { IData } from "../validations/noteValidation";
-import { IError } from "../middleware/validationMiddleware";
-import { type } from "os";
-import { CustomError } from "../helpers/CustomError";
-import { categories } from "../helpers/categoryNames";
+import { filterStatus } from "../config/filterSetting";
+import { createNewObjNote } from "../helpers/createNote";
+
 import { parseDate } from "../helpers/parseContent";
+import { IData } from "../interfaces/IData";
+import { CustomError } from "../CustomError";
 
 export let initialData: Array<INote> = db;
 
 //get requests logic
 export async function getAllNotes(filter: string | undefined) {
-  try {
-    const notes: Array<INote> = initialData.map((note) => ({
-      ...note,
-      dates: parseDate(note.content),
-    }));
+  const notes: Array<INote> = initialData.map((note) => ({
+    ...note,
+    dates: parseDate(note.content),
+  }));
 
-    if (!notes.length) {
-      throw new CustomError(
-        httpCode.NO_CONTENT,
-        "No notes found, please create a note by sending a POST request to /notes"
-      );
-    }
-
-    if (!filter || filter === filterStatus.all) return notes;
-
-    return filter === filterStatus.active
-      ? initialData.filter((note) => !note.isArchived)
-      : initialData.filter((note) => note.isArchived);
-  } catch (error) {
-    throw error;
+  if (!notes.length) {
+    throw new CustomError(
+      httpCode.NO_CONTENT,
+      "No notes found, please create a note by sending a POST request to /notes"
+    );
   }
+
+  if (!filter || filter === filterStatus.all) return notes;
+
+  return filter === filterStatus.active
+    ? initialData.filter((note) => !note.isArchived)
+    : initialData.filter((note) => note.isArchived);
 }
 export async function getNoteById(id: string) {
-  try {
-    const note: INote | undefined = initialData.find((note) => note.id === id);
-    if (!note) {
-      throw new CustomError(httpCode.BAD_REQUEST, "Note not found, wrong id");
-    }
-    return note;
-  } catch (error) {
-    throw error;
+  const note: INote | undefined = initialData.find((note) => note.id === id);
+  if (!note) {
+    throw new CustomError(httpCode.BAD_REQUEST, "Note not found, wrong id");
   }
+  return note;
 }
 export async function getNotesByStatusFilter(filter: string = filterStatus.all) {
-  try {
-    if (filter === filterStatus.all) return initialData;
+  if (filter === filterStatus.all) return initialData;
 
-    const notes: Array<INote> =
-      filter === filterStatus.active
-        ? initialData.filter((note: INote) => !note.isArchived)
-        : initialData.filter((note: INote) => note.isArchived);
-    return notes;
-  } catch (error) {
-    throw error;
-  }
+  const notes: Array<INote> =
+    filter === filterStatus.active
+      ? initialData.filter((note: INote) => !note.isArchived)
+      : initialData.filter((note: INote) => note.isArchived);
+  return notes;
 }
 
 //post request logic
 export async function createNote(data: any) {
-  try {
-    const { name, content, category } = data;
-    const newNote: INote = generateNote(name, content, category);
+  const { name, content, category } = data;
+  const newNote: INote = createNewObjNote(name, content, category);
 
-    initialData.push(newNote);
-    return httpCode.CREATED;
-  } catch (error) {
-    throw error;
-  }
+  initialData.push(newNote);
+  return httpCode.CREATED;
 }
 
 //delete request logic
 export async function deleteNoteById(id: string) {
-  try {
-    const newData = initialData.filter((note) => note.id !== id);
-    if (newData.length === initialData.length) {
-      throw new CustomError(httpCode.BAD_REQUEST, "Note not found, wrong id");
-    }
-    initialData = [...newData];
-    return initialData;
-  } catch (error) {
-    throw error;
+  const newData = initialData.filter((note) => note.id !== id);
+  if (newData.length === initialData.length) {
+    throw new CustomError(httpCode.BAD_REQUEST, "Note not found, wrong id");
   }
+  initialData = [...newData];
+  return initialData;
 }
 export async function deleteAllNotes() {
-  try {
-    initialData = [];
-    return initialData;
-  } catch (error) {
-    throw error;
-  }
+  initialData = [];
+  return initialData;
 }
 
 //patch request logic
 export function updateNote(id: string, data: IData) {
-  try {
-    const index: number = initialData.findIndex((note) => note.id === id);
-    if (index === -1) {
-      throw new CustomError(httpCode.NOT_FOUND, "No any data found by this id");
-    }
-    initialData = initialData.map((note, noteIndex) =>
-      noteIndex === index ? { ...note, ...data } : note
-    );
-    return initialData;
-  } catch (error) {
-    throw error;
+  const index: number = initialData.findIndex((note) => note.id === id);
+  if (index === -1) {
+    throw new CustomError(httpCode.NOT_FOUND, "No any data found by this id");
   }
+  initialData = initialData.map((note, noteIndex) =>
+    noteIndex === index ? { ...note, ...data } : note
+  );
+  return initialData;
 }
 export function toogleArchiveNote(id: string, status: boolean) {
-  try {
-    const noteIndex: number = initialData.findIndex((note) => note.id === id);
-    if (noteIndex === -1) {
-      throw new CustomError(httpCode.NOT_FOUND, "No any data found by this id");
-    }
-    initialData = initialData.map((note, index) =>
-      noteIndex === index ? { ...note, isArchived: status } : note
-    );
-    return initialData;
-  } catch (err) {
-    throw err;
+  const noteIndex: number = initialData.findIndex((note) => note.id === id);
+
+  if (noteIndex === -1) {
+    throw new CustomError(httpCode.NOT_FOUND, "No any data found by this id");
   }
+
+  initialData = initialData.map((note, index) =>
+    noteIndex === index ? { ...note, isArchived: status } : note
+  );
+
+  return initialData;
 }

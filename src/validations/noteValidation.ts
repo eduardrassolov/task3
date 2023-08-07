@@ -1,11 +1,6 @@
 import * as yup from "yup";
-import { categories } from "../helpers/categoryNames";
-
-export interface IData {
-  name: string;
-  content: string;
-  category: keyof typeof categories;
-}
+import { categories } from "../config/categoryNames";
+import { IData } from "../interfaces/IData";
 
 export const noteSchema: yup.ObjectSchema<IData> = yup
   .object({

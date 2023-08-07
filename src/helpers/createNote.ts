@@ -1,7 +1,7 @@
 import { INote } from "../interfaces/INote";
 import { v4 as uuidv4 } from "uuid";
 
-export const generateNote = (name: string, content: string, category: string): INote => {
+export const createNewObjNote = (name: string, content: string, category: string): INote => {
   const newNote: INote = {
     id: uuidv4(),
     name,

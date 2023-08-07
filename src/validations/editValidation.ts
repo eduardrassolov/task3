@@ -1,7 +1,7 @@
 import * as yup from "yup";
-import { categories } from "../helpers/categoryNames";
+import { categories } from "../config/categoryNames";
 
-type EditNote = {
+export type EditNote = {
   name?: string;
   content?: string;
   category?: keyof typeof categories;

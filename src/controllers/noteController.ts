@@ -1,7 +1,7 @@
 import express, { Response, Request } from "express";
 import * as service from "../services/noteService";
 import * as statsService from "../services/statsService";
-import httpCode from "../helpers/httpCode";
+import httpCode from "../config/httpCode";
 
 export const router = express.Router();
 
@@ -15,6 +15,7 @@ export const getAllNotes = async (req: Request, res: Response) => {
     if (error instanceof Error) res.status(httpCode.NOT_FOUND).send(error.message);
   }
 };
+//
 export const getNoteById = async (req: Request, res: Response) => {
   try {
     const {
